@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kalkulator Winrate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      max-width: 400px;
+      width: 100%;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+    input {
+      background: #333;
+      color: #eee;
+    }
+    button {
+      background: #0d6efd;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #0b5ed7;
+    }
+    .result {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #0f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Kalkulator Winrate</h2>
+    <label>Total Match:</label>
+    <input type="number" id="totalMatches" placeholder="Contoh: 147">
+    
+    <label>Winrate Sekarang (%):</label>
+    <input type="number" step="0.01" id="currentWR" placeholder="Contoh: 69.39">
+    
+    <label>Target Winrate (%):</label>
+    <input type="number" step="0.01" id="targetWR" placeholder="Contoh: 70">
+    
+    <button onclick="calculate()">Hitung</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const total = parseInt(document.getElementById("totalMatches").value);
+      const currentWR = parseFloat(document.getElementById("currentWR").value);
+      const targetWR = parseFloat(document.getElementById("targetWR").value);
+
+      if (isNaN(total) || isNaN(currentWR) || isNaN(targetWR)) {
+        document.getElementById("result").innerText = "⚠️ Mohon isi semua data!";
+        return;
+      }
+
+      let currentWins = Math.floor(total * (currentWR / 100));
+      let k = 0;
+
+      while ((currentWins + k) / (total + k) < targetWR / 100) {
+        k++;
+        if (k > 10000) { // biar aman ga infinite loop
+          document.getElementById("result").innerText = "⚠️ Target terlalu tinggi!";
+          return;
+        }
+      }
+
+      document.getElementById("result").innerText = "Butuh menang berturut-turut: " + k;
+    }
+  </script>
+</body>
+</html>
